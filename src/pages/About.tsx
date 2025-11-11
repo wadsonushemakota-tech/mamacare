@@ -1,10 +1,22 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { Heart, Target, Users, Award } from "lucide-react";
 import educationImage from "@/assets/education-woman.jpg";
 
 const About = () => {
+  const [showDonate, setShowDonate] = useState(false);
+  const [amount, setAmount] = useState("");
+  const [method, setMethod] = useState<"ecocash" | "bank">("ecocash");
+
+  const ecocashNumber = "0777076575";
+  const contactEmail = "official.nustenactus@gmail.com";
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard?.writeText(text).catch(() => {});
+  };
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-accent/20">
       <Navbar />
@@ -126,6 +138,92 @@ const About = () => {
           </div>
         </div>
       </section>
+
+      {/* Donate CTA section above footer */}
+      <section className="container mx-auto px-4 pb-10">
+        <Card className="p-6 border-2 border-primary/20 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div>
+            <h3 className="text-2xl font-bold mb-1">Support Mama Care</h3>
+            <p className="text-muted-foreground">Donate any amount to help us reach more mothers. Choose Ecocash or Bank transfer, or contact us via email.</p>
+          </div>
+          <Button className="bg-gradient-to-r from-primary to-secondary" onClick={() => setShowDonate(true)}>Donate</Button>
+        </Card>
+      </section>
+
+      {/* Donate modal */}
+      {showDonate && (
+        <div className="fixed inset-0 z-50">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setShowDonate(false)} />
+          <div className="absolute inset-0 flex items-center justify-center p-4">
+            <Card className="relative w-full max-w-xl p-6 border-2">
+              <div className="flex items-start justify-between mb-4">
+                <h4 className="text-xl font-semibold">Donate to ENACTUS NUST</h4>
+                <button aria-label="Close" className="text-muted-foreground hover:text-foreground" onClick={() => setShowDonate(false)}>✕</button>
+              </div>
+              <div className="space-y-5">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Amount (USD or ZWL)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="Enter amount"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Payment Method</label>
+                  <div className="flex gap-3">
+                    <Button variant={method === "ecocash" ? "default" : "outline"} onClick={() => setMethod("ecocash")}>Ecocash</Button>
+                    <Button variant={method === "bank" ? "default" : "outline"} onClick={() => setMethod("bank")}>Bank Account</Button>
+                  </div>
+                </div>
+                {method === "ecocash" ? (
+                  <div className="rounded-lg border p-4">
+                    <p className="mb-2">
+                      Send via <span className="font-semibold">Ecocash</span> to:
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-mono text-lg">{ecocashNumber}</p>
+                        <p className="text-sm text-muted-foreground">Reference: Mama Care Donation</p>
+                      </div>
+                      <Button variant="outline" onClick={() => copyToClipboard(ecocashNumber)}>Copy</Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="rounded-lg border p-4">
+                    <p className="mb-2">
+                      Bank transfer details are available on request.
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p>Contact us to receive official bank account details.</p>
+                        <a href={`mailto:${contactEmail}`} className="text-primary underline">{contactEmail}</a>
+                      </div>
+                      <Button variant="outline" onClick={() => copyToClipboard(contactEmail)}>Copy email</Button>
+                    </div>
+                  </div>
+                )}
+
+                <div className="rounded-lg border p-4">
+                  <p className="mb-2">Prefer email? Reach out and we’ll assist:</p>
+                  <div className="flex items-center justify-between">
+                    <a href={`mailto:${contactEmail}`} className="text-primary underline">{contactEmail}</a>
+                    <Button variant="outline" onClick={() => copyToClipboard(contactEmail)}>Copy email</Button>
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-3">
+                  <Button variant="outline" onClick={() => setShowDonate(false)}>Close</Button>
+                  <Button className="bg-gradient-to-r from-primary to-secondary" onClick={() => setShowDonate(false)}>Done</Button>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>
