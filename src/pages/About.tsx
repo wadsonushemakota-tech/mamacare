@@ -16,7 +16,7 @@ const About = () => {
 
   const ecocashNumber = "0777076575";
   const contactEmail = "official.nustenactus@gmail.com";
-  const bankName = "Sterward Bank";
+  const bankName = "Steward Bank";
   const accountName = "Nkosilathi korma";
   const bankAccounts = { ZWL: "1046845718", USD: "1049162387" } as const;
 
@@ -177,7 +177,7 @@ const About = () => {
         <Card className="p-6 border-2 border-primary/20 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
             <h3 className="text-2xl font-bold mb-1">Support Mama Care</h3>
-            <p className="text-muted-foreground">Donate any amount to help us reach more mothers. Choose Ecocash or Bank transfer, or contact us via email.</p>
+                  <p className="text-muted-foreground">Donate any amount to help us reach more mothers. Choose Eccocash or Bank transfer, or contact us via email.</p>
           </div>
           <Button className="bg-gradient-to-r from-primary to-secondary" onClick={() => setShowDonate(true)}>Donate</Button>
         </Card>
@@ -208,21 +208,21 @@ const About = () => {
                 <div>
                   <label className="block text-sm font-medium mb-2">Payment Method</label>
                   <div className="flex gap-3">
-                    <Button variant={method === "ecocash" ? "default" : "outline"} onClick={() => setMethod("ecocash")}>Ecocash</Button>
+                      <Button variant={method === "ecocash" ? "default" : "outline"} onClick={() => setMethod("ecocash")}>Eccocash</Button>
                     <Button variant={method === "bank" ? "default" : "outline"} onClick={() => setMethod("bank")}>Bank Account</Button>
                   </div>
                 </div>
                 {method === "ecocash" ? (
                   <div className="rounded-lg border p-4">
                     <p className="mb-2">
-                      Send via <span className="font-semibold">Ecocash</span> to:
+                      Send via <span className="font-semibold">Eccocash</span> to:
                     </p>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-mono text-lg">{ecocashNumber}</p>
                         <p className="text-sm text-muted-foreground">Reference: Mama Care Donation</p>
                       </div>
-                      <Button variant="outline" onClick={() => copyToClipboard(ecocashNumber, "Ecocash number")}>Copy</Button>
+                      <Button variant="outline" onClick={() => copyToClipboard(ecocashNumber, "Eccocash number")}>Copy</Button>
                     </div>
                   </div>
                 ) : (
