@@ -18,11 +18,9 @@ const Index = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = [heroImage, wellnessImage, nutritionImage, educationImage];
 
-  // ENACTUS side carousels
-  const [leftIndex, setLeftIndex] = useState(0);
-  const [rightIndex, setRightIndex] = useState(0);
-  const leftImages = [img1, img2];
-  const rightImages = [img3, img4];
+  // ENACTUS left-side carousel (all images on the left)
+  const [enactusIndex, setEnactusIndex] = useState(0);
+  const enactusImages = [img1, img2, img3, img4];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -33,11 +31,10 @@ const Index = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setLeftIndex((prev) => (prev + 1) % leftImages.length);
-      setRightIndex((prev) => (prev + 1) % rightImages.length);
+      setEnactusIndex((prev) => (prev + 1) % enactusImages.length);
     }, 4000);
     return () => clearInterval(interval);
-  }, [leftImages.length, rightImages.length]);
+  }, [enactusImages.length]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-accent/20">
@@ -90,26 +87,26 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ENACTUS NUST Section with side image transitions */}
+      {/* ENACTUS NUST Section: all images on the left, text fills right */}
       <section className="container mx-auto px-4 py-20">
-        <div className="grid md:grid-cols-3 gap-8 items-center">
-          {/* Left images (1.jpg, 2.jpg) */}
-          <div className="relative rounded-3xl shadow-medium w-full h-[320px] overflow-hidden order-1">
-            {leftImages.map((img, index) => (
+        <div className="grid md:grid-cols-2 gap-10 items-center">
+          {/* Left images carousel (1.jpg, 2.jpg, 3.jpg, 4.jpg) */}
+          <div className="relative rounded-3xl shadow-medium w-full h-[500px] overflow-hidden">
+            {enactusImages.map((img, index) => (
               <img
                 key={index}
                 src={img}
-                alt={`ENACTUS left ${index + 1}`}
+                alt={`ENACTUS ${index + 1}`}
                 className={`absolute inset-0 w-full h-full object-cover rounded-3xl transition-opacity duration-1000 ${
-                  index === leftIndex ? "opacity-100" : "opacity-0"
+                  index === enactusIndex ? "opacity-100" : "opacity-0"
                 }`}
               />
             ))}
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
           </div>
 
-          {/* Center text */}
-          <div className="space-y-6 text-xl text-muted-foreground text-center md:text-justify order-2">
+          {/* Right text content expands to the right margin */}
+          <div className="space-y-6 text-xl text-muted-foreground md:text-justify">
             <p>
               <span className="text-hot-pink">ENACTUS NUST</span> is a student-driven organization at the National University of Science and Technology that empowers young innovators to create sustainable entrepreneurial solutions for social, economic, and environmental challenges.
               It fosters leadership, creativity, and business acumen among students through real-world projects that transform lives and communities.
@@ -118,21 +115,6 @@ const Index = () => {
               It connects students with industry mentors, competitions and global networks to expand their vision and skills.
               Ultimately, <span className="text-hot-pink">ENACTUS NUST</span> stands for social entrepreneurship that inspires progress and builds a better Zimbabwe for all.
             </p>
-          </div>
-
-          {/* Right images (3.jpg, 4.jpg) */}
-          <div className="relative rounded-3xl shadow-medium w-full h-[320px] overflow-hidden order-3">
-            {rightImages.map((img, index) => (
-              <img
-                key={index}
-                src={img}
-                alt={`ENACTUS right ${index + 1}`}
-                className={`absolute inset-0 w-full h-full object-cover rounded-3xl transition-opacity duration-1000 ${
-                  index === rightIndex ? "opacity-100" : "opacity-0"
-                }`}
-              />
-            ))}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
           </div>
         </div>
       </section>
