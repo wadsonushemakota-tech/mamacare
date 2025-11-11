@@ -8,12 +8,7 @@ import React from "react";
 import ArticleDisplay from "@/components/ArticleDisplay";
 import { articles } from "@/data/articles";
 
-interface ApiArticle {
-  _id: string;
-  content: string;
-  title: string;
-  url?: string; // Added url for external links
-}
+// Removed ApiArticle interface as 'More Relevant Articles' section was removed
 
 // Website Modal Component
 function WebsiteModal(props: { isOpen: boolean; onClose: () => void; websiteUrl: string; websiteName: string }) {
@@ -206,11 +201,7 @@ const Resources = () => {
   const [currentArticle, setCurrentArticle] = useState<Article | null>(null)
   const [videoCache, setVideoCache] = useState<{ [key: string]: string }>({})
   
-  const apiArticles: ApiArticle[] = [
-    { _id: "1", title: "Pregnancy Nutrition Guide", content: "Essential foods and supplements for a healthy pregnancy.", url: "https://www.who.int/news-room/fact-sheets/detail/maternal-mortality" },
-    { _id: "2", title: "Managing Pregnancy Fatigue", content: "Tips and tricks to combat tiredness during your pregnancy journey.", url: "https://www.babycenter.com/pregnancy/feel-better/fatigue-during-pregnancy" },
-    { _id: "3", title: "Mindfulness for Expectant Moms", content: "Practices to reduce stress and promote well-being.", url: "https://www.whattoexpect.com/pregnancy/mind-and-body/mindfulness-during-pregnancy" },
-  ];
+  // Removed apiArticles data for the deleted section
 
   const handleVideoClick = (video: VideoResource) => {
     setCurrentVideo(video);
@@ -403,39 +394,6 @@ const Resources = () => {
             </p>
           </Card>
 
-          {/* API Fetched Articles Section */}
-          <div className="mt-16">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="p-3 rounded-full bg-gradient-to-br from-primary to-secondary">
-                <BookOpen className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <h2 className="text-3xl font-bold">More Relevant Articles</h2>
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {apiArticles.length > 0 ? (
-                apiArticles.map((article) => (
-                  <Card key={article._id} className="group border-2 hover:border-primary transition-all duration-300 hover:shadow-medium">
-                    <div className="p-6 space-y-4">
-                      <div>
-                        <h3 className="text-xl font-semibold mb-2">{article.title}</h3>
-                        <p className="text-muted-foreground text-sm mb-4">{article.content}</p>
-                      </div>
-                      <Button
-                        onClick={() => window.open(article.url || '#', '_blank')}
-                        variant="outline"
-                        className="w-full border-2 hover:border-primary transition-all duration-300"
-                      >
-                        <ExternalLink className="h-4 w-4 mr-2" />
-                        Read More
-                      </Button>
-                    </div>
-                  </Card>
-                ))
-              ) : (
-                <p className="text-center col-span-full text-muted-foreground">No additional articles found or failed to load.</p>
-              )}
-            </div>
-          </div>
 
         </div>
       </section>
