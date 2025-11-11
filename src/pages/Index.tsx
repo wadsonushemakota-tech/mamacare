@@ -24,7 +24,12 @@ import img12 from "@/assets/12.jpg";
 
 const Index = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const images = [heroImage, wellnessImage, nutritionImage, educationImage];
+  // Use the full set of 12 numbered images for the hero carousel
+  const images = [
+    img1, img2, img3, img4,
+    img5, img6, img7, img8,
+    img9, img10, img11, img12,
+  ];
 
   // ENACTUS left-side carousel (all images on the left)
   const [enactusIndex, setEnactusIndex] = useState(0);
