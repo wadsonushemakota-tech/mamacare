@@ -5,40 +5,112 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Paperclip, Send } from "lucide-react";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { useAuth } from "@/contexts/AuthContext";
 
-const initialDoctorMessages = [
-  { id: 1, text: "Good morning! This is Dr. Ushemakota. How can I assist you today?", sender: "Dr. Ushemakota", timestamp: "9:00 AM" },
-  { id: 2, text: "Good morning, Doctor. I've been experiencing some mild cramping. Is this normal in the second trimester?", sender: "user", timestamp: "9:02 AM" },
-  { id: 3, text: "Mild cramping can be normal as your uterus expands, but it's always good to be cautious. Are you experiencing any other symptoms, like bleeding or severe pain?", sender: "Dr. Ushemakota", timestamp: "9:03 AM" },
-  { id: 4, text: "No, nothing else. Just the cramping.", sender: "user", timestamp: "9:05 AM" },
-  { id: 5, text: "In that case, I recommend you rest and stay hydrated. If the cramping gets worse or you notice any other symptoms, please let me know immediately. We can schedule a check-up to be safe.", sender: "Dr. Ushemakota", timestamp: "9:06 AM" },
+type Channel = "doctor" | "moms";
+type Message = { id: number | string; text: string; sender: string; timestamp: string; channel: Channel; userEmail?: string };
+
+const initialDoctorMessages: Message[] = [
+  { id: 1, text: "Good morning! This is Dr. Ushemakota. How can I assist you today?", sender: "Dr. Ushemakota", timestamp: "9:00 AM", channel: "doctor" },
 ];
 
-const initialMomsMessages = [
-  { id: 1, text: "Hey everyone! I'm feeling so tired lately, any tips for boosting energy in the third trimester?", sender: "Amai Wadson", timestamp: "2:30 PM" },
-  { id: 2, text: "I totally get that! I found short walks and iron-rich foods really helped me.", sender: "Mhamha VaCarlos", timestamp: "2:32 PM" },
-  { id: 3, text: "Has anyone tried prenatal yoga for back pain? I'm desperate!", sender: "user", timestamp: "2:35 PM" },
-  { id: 4, text: "Yes! It was a lifesaver for me. There's a great online class I can recommend.", sender: "Umama kaNkosi", timestamp: "2:36 PM" },
+const initialMomsMessages: Message[] = [
+  { id: 1, text: "Welcome to Moms Chat! Share your experiences and tips.", sender: "Moderator", timestamp: "2:30 PM", channel: "moms" },
 ];
 
 const ContactCenter = () => {
-  const [activeChannel, setActiveChannel] = useState<'doctor' | 'moms'>('doctor');
-  const [messages, setMessages] = useState(initialDoctorMessages);
+  const { user } = useAuth();
+  const [activeChannel, setActiveChannel] = useState<Channel>('doctor');
+  const [messages, setMessages] = useState<Message[]>(initialDoctorMessages);
   const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
-    if (activeChannel === 'doctor') {
-      setMessages(initialDoctorMessages);
-    } else {
-      setMessages(initialMomsMessages);
-    }
+    const bootstrapLocal = () => {
+      setMessages(activeChannel === 'doctor' ? initialDoctorMessages : initialMomsMessages);
+    };
+
+    const bootstrapSupabase = async () => {
+      if (!isSupabaseConfigured || !supabase) return bootstrapLocal();
+      // Fetch existing messages for the channel
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('channel', activeChannel)
+        .order('created_at', { ascending: true });
+      if (error) {
+        console.error('Supabase fetch error:', error);
+        return bootstrapLocal();
+      }
+      const formatted: Message[] = (data || []).map((m: any) => ({
+        id: m.id,
+        text: m.text,
+        sender: m.sender,
+        timestamp: new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        channel: m.channel,
+        userEmail: m.user_email,
+      }));
+      setMessages(formatted.length ? formatted : (activeChannel === 'doctor' ? initialDoctorMessages : initialMomsMessages));
+
+      // Realtime subscribe
+      const channel = supabase.channel(`messages-${activeChannel}`)
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `channel=eq.${activeChannel}` }, (payload: any) => {
+          const m = payload.new;
+          setMessages(prev => [...prev, {
+            id: m.id,
+            text: m.text,
+            sender: m.sender,
+            timestamp: new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            channel: m.channel,
+            userEmail: m.user_email,
+          }]);
+        })
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    };
+
+    const cleanup = bootstrapSupabase();
+    return () => {
+      if (typeof cleanup === 'function') cleanup();
+    };
   }, [activeChannel]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (newMessage.trim()) {
-      const newMsg = { id: Date.now(), text: newMessage, sender: "user", timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
-      setMessages([...messages, newMsg]);
+      const baseMsg: Message = {
+        id: Date.now(),
+        text: newMessage,
+        sender: user?.userType === 'doctor' ? (user?.name || 'Doctor') : 'user',
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        channel: activeChannel,
+        userEmail: user?.email,
+      };
+
+      // Local optimistic update
+      setMessages([...messages, baseMsg]);
       setNewMessage("");
+
+      // Persist to Supabase if configured
+      if (isSupabaseConfigured && supabase) {
+        const { error } = await supabase.from('messages').insert({
+          text: baseMsg.text,
+          sender: baseMsg.sender,
+          channel: baseMsg.channel,
+          user_email: baseMsg.userEmail,
+          created_at: new Date().toISOString(),
+        });
+        if (error) {
+          console.error('Supabase insert error:', error);
+        }
+      } else {
+        // Fallback: store in localStorage per channel
+        const key = `messages-${activeChannel}`;
+        const existing = JSON.parse(localStorage.getItem(key) || '[]');
+        localStorage.setItem(key, JSON.stringify([...existing, baseMsg]));
+      }
     }
   };
 
