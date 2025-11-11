@@ -174,11 +174,8 @@ const Auth = () => {
               <Heart className="h-16 w-16 text-primary mx-auto animate-pulse" fill="currentColor" />
             </div>
             <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent animate-fade-in">
-              Welcome Back
+              Hie {welcomeName}, Welcome to Mama Care
             </h2>
-            <p className="text-2xl text-foreground font-semibold animate-slide-up">
-              {welcomeName}
-            </p>
           </div>
         </div>
       )}
