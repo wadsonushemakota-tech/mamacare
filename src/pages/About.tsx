@@ -2,20 +2,53 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { Heart, Target, Users, Award } from "lucide-react";
 import educationImage from "@/assets/education-woman.jpg";
 
 const About = () => {
+  const { toast } = useToast();
   const [showDonate, setShowDonate] = useState(false);
   const [amount, setAmount] = useState("");
   const [method, setMethod] = useState<"ecocash" | "bank">("ecocash");
+  const [bankCurrency, setBankCurrency] = useState<"ZWL" | "USD">("ZWL");
 
   const ecocashNumber = "0777076575";
   const contactEmail = "official.nustenactus@gmail.com";
+  const bankName = "Sterward Bank";
+  const accountName = "Nkosilathi korma";
+  const bankAccounts = { ZWL: "1046845718", USD: "1049162387" } as const;
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard?.writeText(text).catch(() => {});
+  const reference = useMemo(() => {
+    const suffix = Date.now().toString().slice(-6);
+    return `MC-${bankCurrency}${amount ? `-Amt${amount}` : ""}-${suffix}`;
+  }, [bankCurrency, amount]);
+
+  const copyToClipboard = (text: string, label?: string) => {
+    navigator.clipboard?.writeText(text).then(() => {
+      toast({ title: "Copied", description: label || text });
+    }).catch(() => {});
+  };
+
+  const buildMailto = () => {
+    const subject = `Donation - Bank Transfer (${bankCurrency})`;
+    const bodyLines = [
+      `Hello ENACTUS NUST,`,
+      ``,
+      `I would like to donate ${amount || "an amount"} via ${bankCurrency} bank transfer.`,
+      ``,
+      `Account Name: ${accountName}`,
+      `Bank: ${bankName}`,
+      `Account Number: ${bankAccounts[bankCurrency]}`,
+      `Reference: ${reference}`,
+      ``,
+      `Please confirm receipt.`,
+      ``,
+      `Thank you.`,
+    ];
+    const body = encodeURIComponent(bodyLines.join("\n"));
+    return `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${body}`;
   };
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-accent/20">
@@ -153,7 +186,7 @@ const About = () => {
       {/* Donate modal */}
       {showDonate && (
         <div className="fixed inset-0 z-50">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setShowDonate(false)} />
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowDonate(false)} />
           <div className="absolute inset-0 flex items-center justify-center p-4">
             <Card className="relative w-full max-w-xl p-6 border-2">
               <div className="flex items-start justify-between mb-4">
@@ -189,20 +222,53 @@ const About = () => {
                         <p className="font-mono text-lg">{ecocashNumber}</p>
                         <p className="text-sm text-muted-foreground">Reference: Mama Care Donation</p>
                       </div>
-                      <Button variant="outline" onClick={() => copyToClipboard(ecocashNumber)}>Copy</Button>
+                      <Button variant="outline" onClick={() => copyToClipboard(ecocashNumber, "Ecocash number")}>Copy</Button>
                     </div>
                   </div>
                 ) : (
-                  <div className="rounded-lg border p-4">
-                    <p className="mb-2">
-                      Bank transfer details are available on request.
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p>Contact us to receive official bank account details.</p>
-                        <a href={`mailto:${contactEmail}`} className="text-primary underline">{contactEmail}</a>
+                  <div className="rounded-lg border p-4 space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Select Account Currency</label>
+                      <div className="flex gap-3">
+                        <Button variant={bankCurrency === "ZWL" ? "default" : "outline"} onClick={() => setBankCurrency("ZWL")}>ZWL Account</Button>
+                        <Button variant={bankCurrency === "USD" ? "default" : "outline"} onClick={() => setBankCurrency("USD")}>USD Account</Button>
                       </div>
-                      <Button variant="outline" onClick={() => copyToClipboard(contactEmail)}>Copy email</Button>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-3">
+                      <div className="rounded-lg border p-3">
+                        <p className="text-sm text-muted-foreground">Bank</p>
+                        <p className="font-semibold">{bankName}</p>
+                        <div className="mt-2 flex justify-end">
+                          <Button variant="outline" size="sm" onClick={() => copyToClipboard(bankName, "Bank name")}>Copy</Button>
+                        </div>
+                      </div>
+                      <div className="rounded-lg border p-3">
+                        <p className="text-sm text-muted-foreground">Account Name</p>
+                        <p className="font-semibold">{accountName}</p>
+                        <div className="mt-2 flex justify-end">
+                          <Button variant="outline" size="sm" onClick={() => copyToClipboard(accountName, "Account name")}>Copy</Button>
+                        </div>
+                      </div>
+                      <div className="rounded-lg border p-3 md:col-span-2">
+                        <p className="text-sm text-muted-foreground">Account Number ({bankCurrency})</p>
+                        <p className="font-mono text-lg">{bankAccounts[bankCurrency]}</p>
+                        <div className="mt-2 flex gap-2 justify-end">
+                          <Button variant="outline" size="sm" onClick={() => copyToClipboard(bankAccounts[bankCurrency], "Account number")}>Copy</Button>
+                          <Button variant="outline" size="sm" onClick={() => copyToClipboard(`Bank: ${bankName}\nAccount Name: ${accountName}\nAccount (${bankCurrency}): ${bankAccounts[bankCurrency]}\nReference: ${reference}`, "All bank details")}>Copy all</Button>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="rounded-lg border p-4">
+                      <p className="mb-2">Prefer email? Use the button to prefill a message with your selected account:</p>
+                      <div className="flex items-center justify-between">
+                        <a href={buildMailto()} className="text-primary underline">{contactEmail}</a>
+                        <div className="flex gap-2">
+                          <Button variant="outline" onClick={() => copyToClipboard(contactEmail, "Email address")}>Copy email</Button>
+                          <a href={buildMailto()}>
+                            <Button className="bg-gradient-to-r from-primary to-secondary">Proceed via Email</Button>
+                          </a>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -211,7 +277,7 @@ const About = () => {
                   <p className="mb-2">Prefer email? Reach out and we’ll assist:</p>
                   <div className="flex items-center justify-between">
                     <a href={`mailto:${contactEmail}`} className="text-primary underline">{contactEmail}</a>
-                    <Button variant="outline" onClick={() => copyToClipboard(contactEmail)}>Copy email</Button>
+                    <Button variant="outline" onClick={() => copyToClipboard(contactEmail, "Email address")}>Copy email</Button>
                   </div>
                 </div>
 
