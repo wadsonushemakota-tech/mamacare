@@ -7,14 +7,31 @@
     <meta name="description" content="Mama Care — resources and tools for expectant mothers in Zimbabwe." />
     <meta name="author" content="ENACTUS NUST" />
     <link rel="icon" type="image/svg+xml" href="/baby.svg" />
+    <!-- Canonical and OG URL will be set dynamically to current domain -->
+    <link id="canonicalLink" rel="canonical" href="/" />
 
     <meta property="og:title" content="Mama Care" />
     <meta property="og:description" content="Resources, tracking tools, and support for expectant mothers." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/baby.svg" />
+    <meta property="og:url" content="/" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content="/baby.svg" />
+    <script>
+      // Ensure canonical and og:url reflect the deployed domain (e.g., *.vercel.app)
+      (function () {
+        try {
+          var origin = window.location.origin + "/";
+          var canonical = document.getElementById("canonicalLink");
+          if (canonical) canonical.href = origin;
+          var ogUrl = document.querySelector('meta[property="og:url"]');
+          if (ogUrl) ogUrl.setAttribute("content", origin);
+        } catch (e) {
+          // silently ignore
+        }
+      })();
+    </script>
   </head>
 
   <body>
