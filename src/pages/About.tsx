@@ -31,25 +31,7 @@ const About = () => {
     }).catch(() => {});
   };
 
-  const buildMailto = () => {
-    const subject = `Donation - Bank Transfer (${bankCurrency})`;
-    const bodyLines = [
-      `Hello ENACTUS NUST,`,
-      ``,
-      `I would like to donate ${amount || "an amount"} via ${bankCurrency} bank transfer.`,
-      ``,
-      `Account Name: ${accountName}`,
-      `Bank: ${bankName}`,
-      `Account Number: ${bankAccounts[bankCurrency]}`,
-      `Reference: ${reference}`,
-      ``,
-      `Please confirm receipt.`,
-      ``,
-      `Thank you.`,
-    ];
-    const body = encodeURIComponent(bodyLines.join("\n"));
-    return `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${body}`;
-  };
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-accent/20">
       <Navbar />
@@ -258,18 +240,7 @@ const About = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="rounded-lg border p-4">
-                      <p className="mb-2">Prefer email? Use the button to prefill a message with your selected account:</p>
-                      <div className="flex items-center justify-between">
-                        <a href={buildMailto()} className="text-primary underline">{contactEmail}</a>
-                        <div className="flex gap-2">
-                          <Button variant="outline" onClick={() => copyToClipboard(contactEmail, "Email address")}>Copy email</Button>
-                          <a href={buildMailto()}>
-                            <Button className="bg-gradient-to-r from-primary to-secondary">Proceed via Email</Button>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
+                    
                   </div>
                 )}
 
