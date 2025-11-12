@@ -1,8 +1,59 @@
-# mamacare
+<<<<<<< HEAD
+# Welcome to your Lovable project
 
-Our website helps Zimbabwean women navigate their trimester period and promotes avoiding alcohol.
+## Project info
 
-## Tech Stack
+**URL**: https://lovable.dev/projects/da65119c-5e8a-4970-9461-72d41b492b9b
+
+## How can I edit this code?
+
+There are several ways of editing your application.
+
+**Use Lovable**
+
+Simply visit the [Lovable Project](https://lovable.dev/projects/da65119c-5e8a-4970-9461-72d41b492b9b) and start prompting.
+
+Changes made via Lovable will be committed automatically to this repo.
+
+**Use your preferred IDE**
+
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+
+Follow these steps:
+
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
+
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
+
+# Step 3: Install the necessary dependencies.
+npm i
+
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
+```
+
+**Edit a file directly in GitHub**
+
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
+
+**Use GitHub Codespaces**
+
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
+
+## What technologies are used for this project?
+
+This project is built with:
 
 - Vite
 - TypeScript
@@ -10,47 +61,18 @@ Our website helps Zimbabwean women navigate their trimester period and promotes 
 - shadcn-ui
 - Tailwind CSS
 
-## Getting Started
+## How can I deploy this project?
 
-Prerequisites: Node.js and npm installed.
+Simply open [Lovable](https://lovable.dev/projects/da65119c-5e8a-4970-9461-72d41b492b9b) and click on Share -> Publish.
 
-```sh
-# Clone the repository
-git clone https://github.com/wadsonushemakota-tech/mamacare
-cd mamacare
+## Can I connect a custom domain to my Lovable project?
 
-# Install dependencies
-npm i
+Yes, you can!
 
-# Start the development server
-npm run dev
-```
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-## Project Structure
-
-- `src/` contains application source code (components, pages, hooks)
-- `public/` static assets
-- `tailwind.config.ts` Tailwind configuration
-- `vite.config.ts` Vite configuration
-
-## Deployment
-
-- Always-updating branch alias for `main`:
-  - `https://mamacare-git-main-nust-enactus.vercel.app/`
-- Use this link to preview the latest build after each push.
-- Avoid single-deployment URLs with random suffixes (e.g., `-4h43jszmt-`) as they are immutable snapshots.
-
-### Cache-busting tips
-- Hard refresh: Windows `Ctrl+F5`, macOS `Cmd+Shift+R`.
-- Add a cache buster: append a query string, e.g. `?t=1731348000`.
-- Incognito window or DevTools → Network → "Disable cache" for quick verification.
-
-### Currently live updates
-- Donation popup and recent UI tweaks.
-- ENACTUS left-side slider uses images `1.jpg` through `12.jpg` with 4s fade.
-- Sign-in overlay: `Hie {User}, Welcome to Mama Care`.
-- `index.html` dynamically sets `canonical` and `og:url` to the current `*.vercel.app` domain.
-
-## Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+=======
+# mamacare
+Our Website which help Zimbabwean women to navigate their Trimester period not taking alcohol
+>>>>>>> 3883ae2a5151a707c17faab68050fe9b028a3b71

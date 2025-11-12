@@ -34,7 +34,7 @@ const Footer = () => {
             <h3 className="text-lg font-semibold text-dark-black hover:text-hot-pink mb-4">Follow ENACTUS NUST</h3>
             <div className="flex gap-4">
               <a
-                href="https://www.instagram.com/enactuskontuthu?igsh=bG9hYTc1N3hoeHlt"
+                href="https://www.instagram.com/enactusnust"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-3 rounded-full bg-gradient-to-br from-primary to-secondary text-primary-foreground hover:shadow-glow transition-all duration-300 hover:scale-110"
@@ -52,7 +52,7 @@ const Footer = () => {
                 <Music2 className="h-5 w-5" />
               </a>
               <a
-                href="https://www.linkedin.com/in/enactus-nust?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+                href="https://www.linkedin.com/company/enactus-nust"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-3 rounded-full bg-gradient-to-br from-primary to-secondary text-primary-foreground hover:shadow-glow transition-all duration-300 hover:scale-110"

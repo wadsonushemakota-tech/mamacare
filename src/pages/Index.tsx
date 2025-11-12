@@ -9,35 +9,10 @@ import heroImage from "@/assets/hero-pregnant-woman.jpg";
 import wellnessImage from "@/assets/wellness-woman.jpg";
 import nutritionImage from "@/assets/nutrition-woman.jpg";
 import educationImage from "@/assets/education-woman.jpg";
-import img1 from "@/assets/1.jpg";
-import img2 from "@/assets/2.jpg";
-import img3 from "@/assets/3.jpg";
-import img4 from "@/assets/4.jpg";
-import img5 from "@/assets/5.jpg";
-import img6 from "@/assets/6.jpg";
-import img7 from "@/assets/7.jpg";
-import img8 from "@/assets/8.jpg";
-import img9 from "@/assets/9.jpg";
-import img10 from "@/assets/10.jpg";
-import img11 from "@/assets/11.jpg";
-import img12 from "@/assets/12.jpg";
 
 const Index = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  // Use the full set of 12 numbered images for the hero carousel
-  const images = [
-    img1, img2, img3, img4,
-    img5, img6, img7, img8,
-    img9, img10, img11, img12,
-  ];
-
-  // ENACTUS left-side carousel (all images on the left)
-  const [enactusIndex, setEnactusIndex] = useState(0);
-  const enactusImages = [
-    img1, img2, img3, img4,
-    img5, img6, img7, img8,
-    img9, img10, img11, img12,
-  ];
+  const images = [heroImage, wellnessImage, nutritionImage, educationImage];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -45,13 +20,6 @@ const Index = () => {
     }, 4000);
     return () => clearInterval(interval);
   }, [images.length]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setEnactusIndex((prev) => (prev + 1) % enactusImages.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [enactusImages.length]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-accent/20">
@@ -104,35 +72,17 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ENACTUS NUST Section: all images on the left, text fills right */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="grid md:grid-cols-2 gap-10 items-center">
-          {/* Left images carousel (1.jpg, 2.jpg, 3.jpg, 4.jpg) */}
-          <div className="relative rounded-3xl shadow-medium w-full h-[500px] overflow-hidden">
-            {enactusImages.map((img, index) => (
-              <img
-                key={index}
-                src={img}
-                alt={`ENACTUS ${index + 1}`}
-                className={`absolute inset-0 w-full h-full object-cover rounded-3xl transition-opacity duration-1000 ${
-                  index === enactusIndex ? "opacity-100" : "opacity-0"
-                }`}
-              />
-            ))}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
-          </div>
-
-          {/* Right text content expands to the right margin */}
-          <div className="space-y-6 text-xl text-muted-foreground md:text-justify">
-            <p>
-              <span className="text-hot-pink">ENACTUS NUST</span> is a student-driven organization at the National University of Science and Technology that empowers young innovators to create sustainable entrepreneurial solutions for social, economic, and environmental challenges.
-              It fosters leadership, creativity, and business acumen among students through real-world projects that transform lives and communities.
-              The team applies entrepreneurial action to drive positive change, promote sustainability, and support local development.
-              By combining innovation with impact, <span className="text-hot-pink">ENACTUS NUST</span> nurtures future leaders committed to inclusive growth.
-              It connects students with industry mentors, competitions and global networks to expand their vision and skills.
-              Ultimately, <span className="text-hot-pink">ENACTUS NUST</span> stands for social entrepreneurship that inspires progress and builds a better Zimbabwe for all.
-            </p>
-          </div>
+      {/* ENACTUS NUST Section */}
+      <section className="container mx-auto px-4 py-20 text-center">
+        <div className="max-w-3xl mx-auto space-y-6 text-xl text-muted-foreground">
+          <p className="text-justify">
+            <span className="text-hot-pink">ENACTUS NUST</span> is a student-driven organization at the National University of Science and Technology that empowers young innovators to create sustainable entrepreneurial solutions for social, economic, and environmental challenges.
+            It fosters leadership, creativity, and business acumen among students through real-world projects that transform lives and communities.
+            The team applies entrepreneurial action to drive positive change, promote sustainability, and support local development.
+            By combining innovation with impact, <span className="text-hot-pink">ENACTUS NUST</span> nurtures future leaders committed to inclusive growth.
+            It connects students with industry mentors, competitions and global networks to expand their vision and skills.
+            Ultimately, <span className="text-hot-pink">ENACTUS NUST</span> stands for social entrepreneurship that inspires progress and builds a better Zimbabwe for all.
+          </p>
         </div>
       </section>
 
