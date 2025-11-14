@@ -1,4 +1,4 @@
-name: Configure DirectAdmin Redirect
+name: DirectAdmin Remove Redirect
 on:
   push:
     branches:
@@ -8,16 +8,13 @@ jobs:
   redirect:
     runs-on: ubuntu-latest
     steps:
-      - name: Set redirect to Vercel
+      - name: Remove existing root redirect
         env:
           DA_URL: ${{ secrets.DA_URL }}
           DA_USERNAME: ${{ secrets.DA_USERNAME }}
           DA_PASSWORD: ${{ secrets.DA_PASSWORD }}
           DOMAIN: mamacareenactusnust.com
-          DEST: https://mamacare-blond.vercel.app/
         run: |
           set -e
           curl -s -u "$DA_USERNAME:$DA_PASSWORD" -X POST "$DA_URL/CMD_API_REDIRECT" \
             --data "domain=$DOMAIN&action=delete&select0=/" || true
-          curl -s -u "$DA_USERNAME:$DA_PASSWORD" -X POST "$DA_URL/CMD_API_REDIRECT" \
-            --data "domain=$DOMAIN&action=add&from=/&to=$DEST"
