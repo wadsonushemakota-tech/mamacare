@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
-import { Baby, Heart, LogOut, User } from "lucide-react";
+import { Baby, Heart, LogOut, User, Menu } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
@@ -10,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { Sheet, SheetTrigger, SheetContent, SheetClose } from "./ui/sheet";
 
 const Navbar = () => {
   const location = useLocation();
@@ -75,6 +76,59 @@ const Navbar = () => {
                 Contact Center
               </Button>
             </Link>
+          </div>
+
+          <div className="md:hidden flex items-center gap-2">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon" aria-label="Open Menu">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="p-6">
+                <div className="space-y-3">
+                  <Link to="/">
+                    <Button variant={isActive("/") ? "default" : "ghost"} className="w-full">
+                      Home
+                    </Button>
+                  </Link>
+                  <Link to="/about">
+                    <Button variant={isActive("/about") ? "default" : "ghost"} className="w-full">
+                      About
+                    </Button>
+                  </Link>
+                  <Link to="/resources">
+                    <Button variant={isActive("/resources") ? "default" : "ghost"} className="w-full">
+                      Resources
+                    </Button>
+                  </Link>
+                  <Link to="/progress">
+                    <Button variant={isActive("/progress") ? "default" : "ghost"} className="w-full">
+                      My Progress
+                    </Button>
+                  </Link>
+                  <Link to="/contact-center">
+                    <Button variant={isActive("/contact-center") ? "default" : "ghost"} className="w-full">
+                      Contact Center
+                    </Button>
+                  </Link>
+                  {isAuthenticated && user ? (
+                    <Button variant="outline" className="w-full" onClick={handleLogout}>
+                      Sign Out
+                    </Button>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-3">
+                      <Link to="/auth">
+                        <Button variant="outline" className="w-full">Sign In</Button>
+                      </Link>
+                      <Link to="/auth?mode=signup">
+                        <Button className="w-full bg-gradient-to-r from-primary to-secondary">Get Started</Button>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
           
           <div className="flex items-center gap-3">
